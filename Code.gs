@@ -5,9 +5,10 @@ function insertDate() {
     var date = new Date();
     var formattedDate = formatDateCatalan(date);
     var days1977 = insertDaysSince1977();
+    var elapsed = getElapsedTimeSince1977();
 
     //cursor.insertText(days1977);
-    cursor.insertText(formattedDate + ' (dia ' + days1977 +')');
+    cursor.insertText(formattedDate + ' (dia ' + days1977 + ', ' + elapsed.years + ' anys, ' + elapsed.months + ' mesos i ' + elapsed.days + ' dies transcorreguts)');
 
     
   } else {
@@ -60,3 +61,32 @@ function onOpen() {
       .addToUi();
 }
 
+function getElapsedTimeSince1977() {
+  var startDate = new Date(1977, 6, 25); // 25 de juliol de 1977
+  var currentDate = new Date();
+
+  var startYear = startDate.getFullYear();
+  var startMonth = startDate.getMonth();
+  var startDay = startDate.getDate();
+
+  var currentYear = currentDate.getFullYear();
+  var currentMonth = currentDate.getMonth();
+  var currentDay = currentDate.getDate();
+
+  var years = currentYear - startYear;
+  var months = currentMonth - startMonth;
+  var days = currentDay - startDay;
+
+  if (days < 0) {
+    months--;
+    var previousMonth = new Date(currentYear, currentMonth, 0);
+    days += previousMonth.getDate();
+  }
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  return { years: years, months: months, days: days };
+}
